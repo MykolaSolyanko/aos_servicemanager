@@ -6,6 +6,8 @@ replace github.com/ThalesIgnite/crypto11 => github.com/aoscloud/crypto11 v1.0.3-
 
 replace github.com/coreos/go-iptables => github.com/aoscloud/go-iptables v0.0.0-20220926113402-e57055a8a459
 
+replace github.com/aoscloud/aos_common => github.com/MykolaSolyanko/aos_common v0.0.0-20230101120234-a98cc7e4e310
+
 require (
 	github.com/aoscloud/aos_common v0.0.0-20221229074100-a59f80d2f2c0
 	github.com/apparentlymart/go-cidr v1.1.0
@@ -35,6 +37,7 @@ require (
 require (
 	github.com/ThalesIgnite/crypto11 v0.0.0-00010101000000-000000000000 // indirect
 	github.com/anexia-it/fsquota v0.1.3 // indirect
+	github.com/bwesterb/go-xentop v1.0.1 // indirect
 	github.com/cavaliergopher/grab/v3 v3.0.1 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/docker/docker v17.12.1-ce+incompatible // indirect
