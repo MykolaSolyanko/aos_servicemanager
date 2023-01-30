@@ -464,6 +464,12 @@ func (spec *runtimeSpec) setResources(resources []string) error {
 }
 
 func (spec *runtimeSpec) setNamespacePath(namespaceType runtimespec.LinuxNamespaceType, namespacePath string) {
+	spec.ociSpec.Process.Capabilities.Bounding = append(spec.ociSpec.Process.Capabilities.Bounding, "CAP_NET_RAW")
+	spec.ociSpec.Process.Capabilities.Effective = append(spec.ociSpec.Process.Capabilities.Effective, "CAP_NET_RAW")
+	spec.ociSpec.Process.Capabilities.Inheritable = append(spec.ociSpec.Process.Capabilities.Inheritable, "CAP_NET_RAW")
+	spec.ociSpec.Process.Capabilities.Permitted = append(spec.ociSpec.Process.Capabilities.Permitted, "CAP_NET_RAW")
+	spec.ociSpec.Process.Capabilities.Ambient = append(spec.ociSpec.Process.Capabilities.Ambient, "CAP_NET_RAW")
+
 	for i, namespace := range spec.ociSpec.Linux.Namespaces {
 		if namespace.Type == namespaceType {
 			spec.ociSpec.Linux.Namespaces[i].Path = namespacePath
