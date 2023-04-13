@@ -6,6 +6,8 @@ replace github.com/ThalesIgnite/crypto11 => github.com/aoscloud/crypto11 v1.0.3-
 
 replace github.com/coreos/go-iptables => github.com/aoscloud/go-iptables v0.0.0-20220926113402-e57055a8a459
 
+replace github.com/aoscloud/aos_common => /home/mykola-solianko/epam/aos_common
+
 require (
 	github.com/aoscloud/aos_common v0.0.0-20230410084910-6f7518cc6f8a
 	github.com/containernetworking/cni v1.1.2

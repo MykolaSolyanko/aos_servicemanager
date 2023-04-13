@@ -285,6 +285,10 @@ func (launcher *Launcher) RunInstances(instances []aostypes.InstanceInfo, forceR
 	launcher.Lock()
 	defer launcher.Unlock()
 
+	for _, instance := range instances {
+		log.Infof("Run instance %v", instance.InstanceIdent)
+	}
+
 	if forceRestart {
 		log.Debug("Restart instances")
 
@@ -1108,7 +1112,7 @@ newInstancesLoop:
 		for i, curInstance := range curInstances {
 			if curInstance.InstanceIdent == newInstance.InstanceIdent {
 				// Update instance if parameters are changed
-				if !instanceInfoEqual(&curInstance.InstanceInfo, &newInstance) {
+				if !instanceInfoEqual(curInstance.InstanceInfo, newInstance) {
 					curInstance.InstanceInfo = newInstance
 
 					if err := launcher.storage.UpdateInstance(curInstance); err != nil {
@@ -1226,7 +1230,8 @@ func instanceInfoEqual(info1, info2 aostypes.InstanceInfo) bool {
 		return false
 	}
 
-	if len(info1.NetworkParameters.DNSServers) != len(info2.NetworkParameters.DNSServers) {
+	if len(info1.NetworkParameters.DNSServers) != len(info2.NetworkParameters.DNSServers) ||
+		len(info1.NetworkParameters.FirewallRules) != len(info2.NetworkParameters.FirewallRules) {
 		return false
 	}
 
@@ -1235,6 +1240,17 @@ next:
 		for _, dns2 := range info2.NetworkParameters.DNSServers {
 			if dns1 == dns2 {
 				continue next
+			}
+		}
+
+		return false
+	}
+
+nextRule:
+	for _, rule1 := range info1.NetworkParameters.FirewallRules {
+		for _, rule2 := range info2.NetworkParameters.FirewallRules {
+			if rule1 == rule2 {
+				continue nextRule
 			}
 		}
 

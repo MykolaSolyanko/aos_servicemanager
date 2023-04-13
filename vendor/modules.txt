@@ -4,7 +4,7 @@ github.com/ThalesIgnite/crypto11
 # github.com/anexia-it/fsquota v0.1.3
 ## explicit
 github.com/anexia-it/fsquota
-# github.com/aoscloud/aos_common v0.0.0-20230410084910-6f7518cc6f8a
+# github.com/aoscloud/aos_common v0.0.0-20230410084910-6f7518cc6f8a => /home/mykola-solianko/epam/aos_common
 ## explicit; go 1.18
 github.com/aoscloud/aos_common/aoserrors
 github.com/aoscloud/aos_common/aostypes
@@ -308,3 +308,4 @@ google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
 # github.com/ThalesIgnite/crypto11 => github.com/aoscloud/crypto11 v1.0.3-0.20220217163524-ddd0ace39e6f
 # github.com/coreos/go-iptables => github.com/aoscloud/go-iptables v0.0.0-20220926113402-e57055a8a459
+# github.com/aoscloud/aos_common => /home/mykola-solianko/epam/aos_common
