@@ -215,6 +215,8 @@ func New(cfg *config.Config, storage Storage) (manager *NetworkManager, err erro
 	}
 
 	if len(networksInfo) > 0 {
+		manager.cleanNetworks(networksInfo)
+
 		if _, err := manager.createNetwork(networksInfo); err != nil {
 			log.Errorf("Can't create networks: %v", err)
 		}
@@ -531,6 +533,17 @@ func (manager *NetworkManager) createNetwork(
 	}
 
 	return newNetworkParameters, nil
+}
+
+func (manager *NetworkManager) cleanNetworks(networkParameters []aostypes.NetworkParameters) {
+	manager.Lock()
+	defer manager.Unlock()
+
+	for _, networkParameter := range networkParameters {
+		if err := manager.clearNetwork(networkParameter.NetworkID); err != nil {
+			log.Errorf("Can't clear network: %v", err)
+		}
+	}
 }
 
 func (manager *NetworkManager) updateInstanceNetworkCache(
