@@ -653,11 +653,11 @@ func (launcher *Launcher) setupNetwork(instance *runtimeInstanceInfo) (err error
 	params.Hosts = append(params.Hosts, resourceHosts...)
 
 	if instance.service.serviceConfig.Quotas.DownloadSpeed != nil {
-		params.IngressKbit = *instance.service.serviceConfig.Quotas.DownloadSpeed
+		params.IngressKbit = uint64(*instance.service.serviceConfig.Quotas.DownloadSpeed)
 	}
 
 	if instance.service.serviceConfig.Quotas.UploadSpeed != nil {
-		params.EgressKbit = *instance.service.serviceConfig.Quotas.UploadSpeed
+		params.EgressKbit = uint64(*instance.service.serviceConfig.Quotas.UploadSpeed)
 	}
 
 	if instance.service.serviceConfig.Quotas.DownloadLimit != nil {

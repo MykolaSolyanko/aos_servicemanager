@@ -93,6 +93,10 @@ func validateUnpackedImage(installDir string) (err error) {
 		if err = json.Unmarshal(byteValue, &tmpServiceConfig); err != nil {
 			return aoserrors.Errorf("invalid Aos service config: %v", err)
 		}
+
+		var speed float64 = 6000
+
+		tmpServiceConfig.Quotas.DownloadSpeed = &speed
 	}
 
 	layersSize := len(manifest.Layers)
