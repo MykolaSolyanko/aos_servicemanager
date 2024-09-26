@@ -39,9 +39,9 @@ import (
 const unitStatusChannelSize = 10
 
 const (
-	defaultStartInterval   = 5 * time.Second
+	defaultStartInterval   = 40 * time.Second
 	defaultStartBurst      = 3
-	defaultRestartInterval = 1 * time.Second
+	defaultRestartInterval = 12 * time.Second
 	startTimeoutMultiplier = 1.2
 )
 
@@ -268,6 +268,10 @@ func (runner *Runner) monitorUnitStates() {
 				if unitStatus == nil {
 					unitStatus = &dbus.UnitStatus{Name: unitName, ActiveState: cloudprotocol.InstanceStateInactive}
 				}
+
+				log.WithFields(log.Fields{
+					"name": unitName, "state": unitStatus.ActiveState,
+				}).Debug("!!!!!!!!!!!!!Unit status changed!!!!!!!!!!!!!!")
 
 				if startChan != nil {
 					startChan <- *unitStatus

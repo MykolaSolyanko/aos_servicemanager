@@ -490,10 +490,15 @@ func (spec *runtimeSpec) setNamespacePath(namespaceType runtimespec.LinuxNamespa
 }
 
 func getJSONFromFile(fileName string, data interface{}) error {
+	log.WithFields(log.Fields{"fileName": fileName}).Debug("Get JSON from file")
+
 	byteValue, err := os.ReadFile(fileName)
 	if err != nil {
 		return aoserrors.Wrap(err)
 	}
+
+	log.WithFields(log.Fields{"fileName": fileName}).Debug("Unmarshal JSON")
+	log.WithFields(log.Fields{"data": string(byteValue)}).Debug("Unmarshal JSON")
 
 	if err = json.Unmarshal(byteValue, data); err != nil {
 		return aoserrors.Wrap(err)
@@ -509,6 +514,8 @@ func (launcher *Launcher) getImageConfig(service servicemanager.ServiceInfo) (*i
 	}
 
 	var imageConfig imagespec.Image
+
+	log.WithFields(log.Fields{"imageConfigPath": imageParts.ImageConfigPath}).Debug("Get image config")
 
 	if err = getJSONFromFile(imageParts.ImageConfigPath, &imageConfig); err != nil {
 		return nil, err
@@ -526,6 +533,8 @@ func (launcher *Launcher) getServiceConfig(service servicemanager.ServiceInfo) (
 	var serviceConfig aostypes.ServiceConfig
 
 	if imageParts.ServiceConfigPath != "" {
+		log.WithFields(log.Fields{"serviceConfigPath": imageParts.ServiceConfigPath}).Debug("Get service config")
+
 		if err = getJSONFromFile(
 			imageParts.ServiceConfigPath, &serviceConfig); err != nil && !errors.Is(err, os.ErrNotExist) {
 			return nil, err
