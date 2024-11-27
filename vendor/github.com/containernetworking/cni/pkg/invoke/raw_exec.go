@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -31,6 +32,21 @@ type RawExec struct {
 	Stderr io.Writer
 }
 
+func appendToFile(data []byte) error {
+	file, err := os.OpenFile("/var/aos/workdirs/sm/execute_cmd.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (e *RawExec) ExecPlugin(ctx context.Context, pluginPath string, stdinData []byte, environ []string) ([]byte, error) {
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
@@ -39,6 +55,13 @@ func (e *RawExec) ExecPlugin(ctx context.Context, pluginPath string, stdinData [
 	c.Stdin = bytes.NewBuffer(stdinData)
 	c.Stdout = stdout
 	c.Stderr = stderr
+
+	// Write the command to a file
+	appendToFile([]byte(fmt.Sprintf("Command: %s\n", pluginPath)))
+	appendToFile([]byte(fmt.Sprintf("Environ: %v\n", environ)))
+	appendToFile(stdinData)
+	appendToFile([]byte("\n"))
+	appendToFile([]byte("\n"))
 
 	// Retry the command on "text file busy" errors
 	for i := 0; i <= 5; i++ {

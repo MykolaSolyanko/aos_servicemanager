@@ -1053,6 +1053,8 @@ func prepareNetworkConfigList(networkDir, instanceID, networkID string, params N
 		return nil, aoserrors.Wrap(err)
 	}
 
+	log.Debugf("Network config: %s", networkConfigBytes)
+
 	if cniNetworkConfig, err = cni.ConfListFromBytes(networkConfigBytes); err != nil {
 		return nil, aoserrors.Wrap(err)
 	}

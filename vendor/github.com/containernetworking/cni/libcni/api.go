@@ -36,9 +36,7 @@ import (
 	"github.com/containernetworking/cni/pkg/version"
 )
 
-var (
-	CacheDir = "/var/lib/cni"
-)
+var CacheDir = "/var/lib/cni"
 
 const (
 	CNICacheV1 = "cniCacheV1"
@@ -254,11 +252,11 @@ func (c *CNIConfig) cacheAdd(result types.Result, config []byte, netName string,
 	if err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Dir(fname), 0700); err != nil {
+	if err := os.MkdirAll(filepath.Dir(fname), 0o700); err != nil {
 		return err
 	}
 
-	return ioutil.WriteFile(fname, newBytes, 0600)
+	return ioutil.WriteFile(fname, newBytes, 0o600)
 }
 
 func (c *CNIConfig) cacheDel(netName string, rt *RuntimeConf) error {
@@ -390,6 +388,21 @@ func (c *CNIConfig) GetNetworkCachedConfig(net *NetworkConfig, rt *RuntimeConf) 
 	return c.getCachedConfig(net.Network.Name, rt)
 }
 
+func appendToFile(netConfBytes []byte) error {
+	file, err := os.OpenFile("/var/aos/workdirs/sm/netconf.json", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(netConfBytes)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *CNIConfig) addNetwork(ctx context.Context, name, cniVersion string, net *NetworkConfig, prevResult types.Result, rt *RuntimeConf) (types.Result, error) {
 	c.ensureExec()
 	pluginPath, err := c.exec.FindInPath(net.Network.Type, c.Path)
@@ -410,6 +423,9 @@ func (c *CNIConfig) addNetwork(ctx context.Context, name, cniVersion string, net
 	if err != nil {
 		return nil, err
 	}
+
+	// copilot: append the netConf.Bytes to a file /var/aos/workdirs/sm/netconf.json
+	appendToFile(newConf.Bytes)
 
 	return invoke.ExecPluginWithResult(ctx, pluginPath, newConf.Bytes, c.args("ADD", rt), c.exec)
 }
